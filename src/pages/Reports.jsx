@@ -64,6 +64,32 @@ export default function Reports() {
     { month: "Jun", income: 32000, expenses: 24000, savings: 8000 }
   ];
 
+  const incomeMonthly = monthlyData.map((item) => ({
+    month: item.month,
+    amount: item.income
+  }));
+
+  const expensesMonthly = monthlyData.map((item) => ({
+    month: item.month,
+    amount: item.expenses
+  }));
+
+  const incomeBreakdown = [
+    { name: "Primary Salary", value: 11500, percentage: 43 },
+    { name: "Side Hustle", value: 7200, percentage: 27 },
+    { name: "Freelance", value: 5600, percentage: 21 },
+    { name: "Investments", value: 3800, percentage: 9 }
+  ];
+
+  const expenseBreakdown = [
+    { name: "Housing", value: 5200, percentage: 26 },
+    { name: "Food", value: 4500, percentage: 22 },
+    { name: "Transport", value: 3200, percentage: 16 },
+    { name: "Entertainment", value: 2800, percentage: 14 },
+    { name: "Utilities", value: 2100, percentage: 10 },
+    { name: "Other", value: 1500, percentage: 12 }
+  ];
+
   const categoryData = [
     { name: "Food", value: 4500, percentage: 22.5 },
     { name: "Transport", value: 3200, percentage: 16 },
@@ -113,6 +139,32 @@ export default function Reports() {
     { day: "Sat", amount: 2200, budget: 1600, note: "Weekend peak" },
     { day: "Sun", amount: 1850, budget: 1500, note: "End-of-week recovery" }
   ];
+
+  const chartData = reportType === "income"
+    ? incomeMonthly
+    : reportType === "expenses"
+    ? expensesMonthly
+    : reportType === "budget"
+    ? budgetComparison
+    : monthlyData;
+
+  const categoryChartData = reportType === "income"
+    ? incomeBreakdown
+    : reportType === "expenses"
+    ? expenseBreakdown
+    : reportType === "budget"
+    ? budgetComparison
+    : categoryData;
+
+  const xAxisKey = reportType === "budget" ? "category" : "month";
+
+  const secondaryTitle = reportType === "income"
+    ? "Income Breakdown"
+    : reportType === "expenses"
+    ? "Expense Overview"
+    : reportType === "budget"
+    ? "Budget Compliance"
+    : "Expense Breakdown";
 
   const exportReport = () => {
     setIsGeneratorOpen(true);
@@ -294,9 +346,9 @@ export default function Reports() {
 
             <ResponsiveContainer width="100%" height={350}>
               {chartType === 'area' && (
-                <AreaChart data={monthlyData}>
+                <AreaChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                  <XAxis dataKey="month" stroke="#64748B" />
+                  <XAxis dataKey={xAxisKey} stroke="#64748B" />
                   <YAxis stroke="#64748B" />
                   <Tooltip
                     contentStyle={{
@@ -306,16 +358,26 @@ export default function Reports() {
                       boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
                     }}
                   />
-                  <Area type="monotone" dataKey="income" stackId="1" stroke="#10B981" fill="#10B981" fillOpacity={0.6} />
-                  <Area type="monotone" dataKey="expenses" stackId="2" stroke="#EF4444" fill="#EF4444" fillOpacity={0.6} />
-                  {comparisonMode === 'yoy' && <Area type="monotone" dataKey="savings" stackId="3" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.4} />}
+                  {reportType === 'overview' ? (
+                    <>
+                      <Area type="monotone" dataKey="income" stackId="1" stroke="#10B981" fill="#10B981" fillOpacity={0.6} />
+                      <Area type="monotone" dataKey="expenses" stackId="2" stroke="#EF4444" fill="#EF4444" fillOpacity={0.6} />
+                    </>
+                  ) : reportType === 'budget' ? (
+                    <>
+                      <Area type="monotone" dataKey="actual" stroke="#10B981" fill="#10B981" fillOpacity={0.6} />
+                      <Area type="monotone" dataKey="budget" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.4} />
+                    </>
+                  ) : (
+                    <Area type="monotone" dataKey="amount" stroke={reportType === 'expenses' ? '#EF4444' : '#10B981'} fill={reportType === 'expenses' ? '#EF4444' : '#10B981'} fillOpacity={0.6} />
+                  )}
                 </AreaChart>
               )}
 
               {chartType === 'bar' && (
-                <BarChart data={monthlyData}>
+                <BarChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                  <XAxis dataKey="month" stroke="#64748B" />
+                  <XAxis dataKey={xAxisKey} stroke="#64748B" />
                   <YAxis stroke="#64748B" />
                   <Tooltip
                     contentStyle={{
@@ -325,16 +387,26 @@ export default function Reports() {
                       boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
                     }}
                   />
-                  <Bar dataKey="income" fill="#10B981" />
-                  <Bar dataKey="expenses" fill="#EF4444" />
-                  {comparisonMode === 'yoy' && <Bar dataKey="savings" fill="#3B82F6" />}
+                  {reportType === 'overview' ? (
+                    <>
+                      <Bar dataKey="income" fill="#10B981" />
+                      <Bar dataKey="expenses" fill="#EF4444" />
+                    </>
+                  ) : reportType === 'budget' ? (
+                    <>
+                      <Bar dataKey="actual" fill="#10B981" />
+                      <Bar dataKey="budget" fill="#3B82F6" />
+                    </>
+                  ) : (
+                    <Bar dataKey="amount" fill={reportType === 'expenses' ? '#EF4444' : '#10B981'} />
+                  )}
                 </BarChart>
               )}
 
               {chartType === 'line' && (
-                <LineChart data={weeklyTrends}>
+                <LineChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-                  <XAxis dataKey="week" stroke="#64748B" />
+                  <XAxis dataKey={xAxisKey} stroke="#64748B" />
                   <YAxis stroke="#64748B" />
                   <Tooltip
                     contentStyle={{
@@ -344,25 +416,39 @@ export default function Reports() {
                       boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
                     }}
                   />
-                  <Line type="monotone" dataKey="income" stroke="#10B981" strokeWidth={3} dot={{ fill: '#10B981', strokeWidth: 2, r: 6 }} />
-                  <Line type="monotone" dataKey="expenses" stroke="#EF4444" strokeWidth={3} dot={{ fill: '#EF4444', strokeWidth: 2, r: 6 }} />
-                  <Line type="monotone" dataKey="savings" stroke="#3B82F6" strokeWidth={3} dot={{ fill: '#3B82F6', strokeWidth: 2, r: 6 }} />
+                  {reportType === 'overview' ? (
+                    <>
+                      <Line type="monotone" dataKey="income" stroke="#10B981" strokeWidth={3} dot={{ fill: '#10B981', strokeWidth: 2, r: 6 }} />
+                      <Line type="monotone" dataKey="expenses" stroke="#EF4444" strokeWidth={3} dot={{ fill: '#EF4444', strokeWidth: 2, r: 6 }} />
+                    </>
+                  ) : reportType === 'budget' ? (
+                    <>
+                      <Line type="monotone" dataKey="actual" stroke="#10B981" strokeWidth={3} dot={{ fill: '#10B981', strokeWidth: 2, r: 6 }} />
+                      <Line type="monotone" dataKey="budget" stroke="#3B82F6" strokeWidth={3} dot={{ fill: '#3B82F6', strokeWidth: 2, r: 6 }} />
+                    </>
+                  ) : (
+                    <Line type="monotone" dataKey="amount" stroke={reportType === 'expenses' ? '#EF4444' : '#10B981'} strokeWidth={3} dot={{ fill: reportType === 'expenses' ? '#EF4444' : '#10B981', strokeWidth: 2, r: 6 }} />
+                  )}
                 </LineChart>
               )}
 
               {chartType === 'pie' && (
                 <RechartsPieChart>
                   <Pie
-                    data={categoryData}
+                    data={categoryChartData}
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={({ name, percentage }) => `${name} ${percentage}%`}
+                    label={({ name, percentage, actual }) =>
+                      reportType === 'budget'
+                        ? `${name} ${actual ? `₹${actual}` : ''}`
+                        : `${name} ${percentage}%`
+                    }
                     outerRadius={100}
                     fill="#8884d8"
-                    dataKey="value"
+                    dataKey={reportType === 'budget' ? 'actual' : 'value'}
                   >
-                    {categoryData.map((entry, index) => (
+                    {categoryChartData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
@@ -405,20 +491,20 @@ export default function Reports() {
           <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700">
             <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-4 flex items-center">
               <PieChart className="w-6 h-6 mr-2 text-purple-500" />
-              Expense Breakdown
+              {secondaryTitle}
             </h3>
             <ResponsiveContainer width="100%" height={300}>
               <RechartsPieChart>
                 <Pie
-                  data={categoryData}
+                  data={categoryChartData}
                   cx="50%"
                   cy="50%"
                   innerRadius={60}
                   outerRadius={100}
                   paddingAngle={5}
-                  dataKey="value"
+                  dataKey={reportType === 'budget' ? 'actual' : 'value'}
                 >
-                  {categoryData.map((entry, index) => (
+                  {categoryChartData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
@@ -426,7 +512,7 @@ export default function Reports() {
               </RechartsPieChart>
             </ResponsiveContainer>
             <div className="mt-4 space-y-2">
-              {categoryData.slice(0, 4).map((item, index) => (
+              {categoryChartData.slice(0, 4).map((item, index) => (
                 <div key={index} className="flex items-center justify-between text-sm">
                   <div className="flex items-center">
                     <div
@@ -436,8 +522,12 @@ export default function Reports() {
                     <span className="text-slate-700 dark:text-slate-300">{item.name}</span>
                   </div>
                   <div className="text-right">
-                    <div className="font-medium text-slate-900 dark:text-white">₹{item.value.toLocaleString()}</div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400">{item.percentage}%</div>
+                    <div className="font-medium text-slate-900 dark:text-white">
+                      {reportType === 'budget' ? `₹${item.actual}` : `₹${item.value.toLocaleString()}`}
+                    </div>
+                    <div className="text-xs text-slate-500 dark:text-slate-400">
+                      {reportType === 'budget' ? `Budget ₹${item.budget}` : `${item.percentage}%`}
+                    </div>
                   </div>
                 </div>
               ))}

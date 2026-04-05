@@ -178,7 +178,7 @@ export default function Sidebar() {
               <User className="w-4 h-4 text-slate-600 dark:text-slate-400" />
             </div>
             <div>
-              <div className="text-sm font-medium text-slate-900 dark:text-white">John Doe</div>
+              <div className="text-sm font-medium text-slate-900 dark:text-white">Utkarsh</div>
               <div className="text-xs text-slate-500 dark:text-slate-400">Premium User</div>
             </div>
           </div>

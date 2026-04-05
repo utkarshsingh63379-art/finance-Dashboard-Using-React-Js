@@ -117,7 +117,7 @@ export default function Settings() {
                       </label>
                       <input
                         type="text"
-                        defaultValue="John"
+                        defaultValue="utkarsh"
                         className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                       />
                     </div>
@@ -128,7 +128,7 @@ export default function Settings() {
                       </label>
                       <input
                         type="text"
-                        defaultValue="Doe"
+                        defaultValue="singh"
                         className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                       />
                     </div>
@@ -139,7 +139,7 @@ export default function Settings() {
                       </label>
                       <input
                         type="email"
-                        defaultValue="john.doe@example.com"
+                        defaultValue="utkarsh.singh@example.com"
                         className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                       />
                     </div>
@@ -150,7 +150,7 @@ export default function Settings() {
                       </label>
                       <input
                         type="tel"
-                        defaultValue="+1 (555) 123-4567"
+                        defaultValue="+91 99999997"
                         className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                       />
                     </div>
