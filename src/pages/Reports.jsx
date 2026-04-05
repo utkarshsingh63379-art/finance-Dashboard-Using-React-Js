@@ -105,13 +105,13 @@ export default function Reports() {
   ];
 
   const spendingPatterns = [
-    { day: "Mon", amount: 1200 },
-    { day: "Tue", amount: 950 },
-    { day: "Wed", amount: 1150 },
-    { day: "Thu", amount: 1400 },
-    { day: "Fri", amount: 1600 },
-    { day: "Sat", amount: 2200 },
-    { day: "Sun", amount: 1850 }
+    { day: "Mon", amount: 1200, budget: 1100, note: "Steady weekday spend" },
+    { day: "Tue", amount: 950, budget: 1050, note: "Under budget day" },
+    { day: "Wed", amount: 1150, budget: 1100, note: "Small overspend" },
+    { day: "Thu", amount: 1400, budget: 1200, note: "Midweek rise" },
+    { day: "Fri", amount: 1600, budget: 1350, note: "Friday treats" },
+    { day: "Sat", amount: 2200, budget: 1600, note: "Weekend peak" },
+    { day: "Sun", amount: 1850, budget: 1500, note: "End-of-week recovery" }
   ];
 
   const exportReport = () => {
@@ -553,11 +553,11 @@ export default function Reports() {
             <Clock className="w-6 h-6 mr-2 text-orange-500" />
             Weekly Spending Patterns
           </h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={spendingPatterns}>
+          <ResponsiveContainer width="100%" height={320}>
+            <BarChart data={spendingPatterns} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
-              <XAxis dataKey="day" stroke="#64748B" />
-              <YAxis stroke="#64748B" />
+              <XAxis dataKey="day" stroke="#64748B" tick={{ fill: '#475569' }} />
+              <YAxis stroke="#64748B" tick={{ fill: '#475569' }} />
               <Tooltip
                 contentStyle={{
                   backgroundColor: '#F8FAFC',
@@ -566,13 +566,26 @@ export default function Reports() {
                   boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
                 }}
               />
-              <Bar dataKey="amount" fill="#F59E0B" />
+              <Bar dataKey="amount" name="Actual" fill="#2563EB" radius={[8, 8, 0, 0]} />
+              <Bar dataKey="budget" name="Budget" fill="#14B8A6" radius={[8, 8, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
-          <div className="mt-4 text-sm text-slate-600 dark:text-slate-400 space-y-1">
-            <p>• Highest spending on Saturdays (₹2,200)</p>
-            <p>• Lowest spending on Tuesdays (₹950)</p>
-            <p>• Weekend spending is 35% higher than weekdays</p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-3">
+            <div className="rounded-2xl bg-slate-50 dark:bg-slate-700/50 p-4">
+              <div className="text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 mb-2">Top insight</div>
+              <p className="text-sm font-semibold text-slate-900 dark:text-white">Saturday spend overshoots by ₹600</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Peak weekend spend is 38% above the weekday average.</p>
+            </div>
+            <div className="rounded-2xl bg-slate-50 dark:bg-slate-700/50 p-4">
+              <div className="text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 mb-2">Budget check</div>
+              <p className="text-sm font-semibold text-slate-900 dark:text-white">Tuesday stays lean</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Lowest day at ₹950, keeping the week balanced.</p>
+            </div>
+            <div className="rounded-2xl bg-slate-50 dark:bg-slate-700/50 p-4">
+              <div className="text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 mb-2">Weekend trend</div>
+              <p className="text-sm font-semibold text-slate-900 dark:text-white">Weekend jump +35%</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Saturday and Sunday spending beats weekdays by more than one-third.</p>
+            </div>
           </div>
         </div>
       </div>
